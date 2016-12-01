@@ -2,8 +2,13 @@ package maze
 
 import (
 	"fmt"
+	"image"
 	"math/rand"
 	"strings"
+
+	"github.com/llgcode/draw2d/draw2dimg"
+	"image/color"
+	"image/draw"
 )
 
 type Grid struct {
@@ -328,4 +333,55 @@ type Contents interface {
 
 func (g Grid) String() string {
 	return g.PrintOutCleaner(&g)
+}
+
+func (g Grid) to_png_v1(cell_size int) {
+	img_width := cell_size * g.columns
+	img_height := cell_size * g.rows
+	background := color.White
+	wall := color.Black
+	dest := image.NewRGBA(image.Rect(0, 0, img_width+1, img_height+1))
+	gc := draw2dimg.NewGraphicContext(dest)
+	draw.Draw(dest, dest.Bounds(), &image.Uniform{background}, image.ZP, draw.Src)
+	gc.SetStrokeColor(wall)
+
+	for _, cell := range g.AllCells() {
+
+		fmt.Println("cell", cell.Row, cell.Column)
+		var x1 float64 = float64(cell.Column * cell_size)
+		var y1 float64 = float64(cell.Row * cell_size)
+		var x2 float64 = float64((cell.Column + 1) * cell_size)
+		var y2 float64 = float64((cell.Row + 1) * cell_size)
+
+		fmt.Println(x1, y1, x2, y2)
+		if cell.North == nil {
+			gc.MoveTo(x1+0.5, y1+0.5)
+			gc.LineTo(x2+0.5, y1+0.5)
+			gc.SetLineWidth(1)
+			gc.Stroke()
+		}
+
+		if cell.West == nil {
+			gc.MoveTo(x1+0.5, y1+0.5)
+			gc.LineTo(x1+0.5, y2+0.5)
+			gc.SetLineWidth(1)
+			gc.Stroke()
+		}
+
+		if !cell.IsLinked(cell.East) {
+			gc.MoveTo(x2+0.5, y1+0.5)
+			gc.LineTo(x2+0.5, y2+0.5)
+			gc.SetLineWidth(1)
+			gc.Stroke()
+		}
+
+		if !cell.IsLinked(cell.South) {
+			gc.MoveTo(x1+0.5, y2+0.5)
+			gc.LineTo(x2+0.5, y2+0.5)
+			gc.SetLineWidth(1)
+			gc.Stroke()
+		}
+	}
+
+	draw2dimg.SaveToPngFile("hello.png", dest)
 }
