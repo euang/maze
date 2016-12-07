@@ -19,6 +19,6 @@ func LongestPath() {
 
 	grid.distances = *new_distances.path_to(goal)
 	fmt.Println(grid)
-	grid.to_png_v1(10)
+	grid.toPngV1(10)
 
 }
