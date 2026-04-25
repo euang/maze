@@ -196,6 +196,8 @@ func (g *Grid) PrintOutCleaner(i Contents) string {
 					right = !cell.East.IsLinked(cell.East.South)
 					if cell.South != nil {
 						down = !cell.South.IsLinked(cell.East.South)
+					} else {
+						down = false
 					}
 				}
 			}
