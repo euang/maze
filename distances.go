@@ -38,6 +38,11 @@ func (d *Distances) path_to(goal *Cell) *Distances {
 	current := goal
 
 	breadcrumbs := NewDistances(d.root)
+
+	if _, ok := d.Cells[goal]; !ok {
+		return breadcrumbs
+	}
+
 	breadcrumbs.Cells[current] = d.Cells[current]
 
 	for current != d.root {

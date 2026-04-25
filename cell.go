@@ -46,7 +46,7 @@ func (c *Cell) LinkOneWay(cell *Cell) {
 
 func (c *Cell) UnLink(cell *Cell) {
 	delete(c.Links, cell)
-
+	delete(cell.Links, c)
 }
 
 func (c *Cell) IsLinked(cell *Cell) bool {

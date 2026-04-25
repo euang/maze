@@ -1,7 +1,6 @@
 package maze
 
 import (
-	"fmt"
 	"image/color"
 	"math"
 )
@@ -21,7 +20,6 @@ func (g *ColoredGrid) SetDistances(distances Distances) {
 func (g *ColoredGrid) BackgroundColorFor(cell *Cell) color.RGBA {
 
 	distance := g.distances.Cells[cell]
-	fmt.Println("dist:", distance)
 	intensity := float64(g.maximum-distance) / float64(g.maximum)
 	dark := uint8(math.Ceil(255.0 * intensity))
 	bright := 128 + uint8(math.Ceil(127.0*intensity))
