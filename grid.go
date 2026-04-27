@@ -1,7 +1,6 @@
 package maze
 
 import (
-	"fmt"
 	"image"
 	"math/rand"
 	"strings"
@@ -97,7 +96,6 @@ func (g *Grid) PrintOut() string {
 			} else {
 				cell = g.grid[r][c]
 			}
-			fmt.Println(cell.Row, cell.Column)
 			body := "   " //<-- that's THREE(3)spaces!
 			east_boundary := "|"
 			if cell.IsLinked(cell.East) {
@@ -196,7 +194,11 @@ func (g *Grid) PrintOutCleaner(i Contents) string {
 					down = false
 				} else {
 					right = !cell.East.IsLinked(cell.East.South)
-					down = !cell.South.IsLinked(cell.East.South)
+					if cell.South != nil {
+						down = !cell.South.IsLinked(cell.East.South)
+					} else {
+						down = false
+					}
 				}
 			}
 			corner := " "
@@ -225,7 +227,7 @@ func (g *Grid) PrintOutCleaner(i Contents) string {
 			}
 
 			if !left && right && !up && down {
-				corner = "\u250C" //└
+				corner = "\u250C" //┌
 			}
 
 			if left && !right && up && down {
@@ -238,10 +240,6 @@ func (g *Grid) PrintOutCleaner(i Contents) string {
 
 			if left && !right && up && !down {
 				corner = "\u2518" //┘
-			}
-
-			if left && right && !up && !down {
-				corner = "\u2500"
 			}
 
 			if left && !right && !up && !down {
@@ -356,13 +354,11 @@ func (g Grid) toPngV1(cell_size int) {
 
 	for _, cell := range g.AllCells() {
 
-		fmt.Println("cell", cell.Row, cell.Column)
 		var x1 float64 = float64(cell.Column * cell_size)
 		var y1 float64 = float64(cell.Row * cell_size)
 		var x2 float64 = float64((cell.Column + 1) * cell_size)
 		var y2 float64 = float64((cell.Row + 1) * cell_size)
 
-		fmt.Println(x1, y1, x2, y2)
 		if cell.North == nil {
 			gc.MoveTo(x1+0.5, y1+0.5)
 			gc.LineTo(x2+0.5, y1+0.5)
@@ -406,13 +402,10 @@ func (g Grid) toPngV2(cell_size int, bg BackgroundColor) {
 
 	for _, cell := range g.AllCells() {
 
-		fmt.Println("cell", cell.Row, cell.Column)
 		var x1 float64 = float64(cell.Column * cell_size)
 		var y1 float64 = float64(cell.Row * cell_size)
 		var x2 float64 = float64((cell.Column + 1) * cell_size)
 		var y2 float64 = float64((cell.Row + 1) * cell_size)
-
-		fmt.Println(x1, y1, x2, y2)
 
 		color := bg.BackgroundColorFor(cell)
 		gc.SetStrokeColor(color)
